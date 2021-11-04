@@ -138,3 +138,35 @@ z_scores = function(x) {
   return(z)
 }
 ```
+
+## Mutiple outputs
+
+``` r
+mean_and_sd = function(x) {
+  if (!is.numeric(x)) {
+    stop("x needs to be numeric")
+  }
+  
+  if (length(x) < 3) {
+    stop("x should have at least 3 values")
+  }
+  
+  mean_x = mean(x)
+  sd_x = sd(x)
+  
+  output_df = 
+    tibble(
+      mean = mean_x,
+      sd = sd_x
+    )
+  
+  return(output_df)
+}
+
+mean_and_sd(y_vec)
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  12.0 0.253
