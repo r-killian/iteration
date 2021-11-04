@@ -1,0 +1,12 @@
+---
+title: "Writing Functions"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(rvest)
+
+set.seed(1)
+```
+
