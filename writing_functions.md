@@ -163,6 +163,15 @@ mean_and_sd = function(x) {
   return(output_df)
 }
 
+mean_and_sd(x_vec)
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  5.67  3.80
+
+``` r
 mean_and_sd(y_vec)
 ```
 
@@ -170,3 +179,99 @@ mean_and_sd(y_vec)
     ##    mean    sd
     ##   <dbl> <dbl>
     ## 1  12.0 0.253
+
+## Different sample sizes, means, sds
+
+``` r
+sim_data = 
+  tibble(
+    x = rnorm(30, mean = 2, sd = 3)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  2.51  2.82
+
+Write a function that simulates data, computes mean and sd
+
+``` r
+sim_mean_sd = function(n, mu, sigma) {
+  
+  #do checks on inputs
+  
+sim_data = 
+  tibble(
+    x = rnorm(n, mean = mu, sd = sigma)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+#shift + ctrl to select multiple lines!!!
+}
+
+sim_mean_sd(30, 4, 3)
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  3.96  2.43
+
+``` r
+sim_mean_sd(30)
+```
+
+    ## Error in rnorm(n, mean = mu, sd = sigma): argument "mu" is missing, with no default
+
+``` r
+#wont work
+
+sim_mean_sd = function(n, mu = 4, sigma = 3) {
+  
+  #do checks on inputs
+  
+sim_data = 
+  tibble(
+    x = rnorm(n, mean = mu, sd = sigma)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+}
+
+sim_mean_sd(30)
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  2.75  2.73
+
+``` r
+#now it will
+
+sim_mean_sd(30, 40, 3)
+```
+
+    ## # A tibble: 1 x 2
+    ##    mean    sd
+    ##   <dbl> <dbl>
+    ## 1  40.8  3.21
+
+``` r
+#can still specify a value. Using positional matching
+```

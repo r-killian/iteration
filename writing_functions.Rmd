@@ -109,6 +109,70 @@ mean_and_sd = function(x) {
   return(output_df)
 }
 
+mean_and_sd(x_vec)
 mean_and_sd(y_vec)
+```
+
+## Different sample sizes, means, sds
+
+```{r}
+sim_data = 
+  tibble(
+    x = rnorm(30, mean = 2, sd = 3)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+```
+
+Write a function that simulates data, computes mean and sd
+
+```{r, error = T}
+sim_mean_sd = function(n, mu, sigma) {
+  
+  #do checks on inputs
+  
+sim_data = 
+  tibble(
+    x = rnorm(n, mean = mu, sd = sigma)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+#shift + ctrl to select multiple lines!!!
+}
+
+sim_mean_sd(30, 4, 3)
+
+sim_mean_sd(30)
+#wont work
+
+sim_mean_sd = function(n, mu = 4, sigma = 3) {
+  
+  #do checks on inputs
+  
+sim_data = 
+  tibble(
+    x = rnorm(n, mean = mu, sd = sigma)
+  )
+
+sim_data %>% 
+  summarise(
+    mean = mean(x),
+    sd = sd(x)
+  )
+}
+
+sim_mean_sd(30)
+#now it will
+
+sim_mean_sd(30, 40, 3)
+#can still specify a value. Using positional matching
 ```
 
