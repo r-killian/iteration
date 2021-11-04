@@ -275,3 +275,205 @@ sim_mean_sd(30, 40, 3)
 ``` r
 #can still specify a value. Using positional matching
 ```
+
+## Napoleon Dynamite
+
+``` r
+url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1"
+
+dynamite_html = read_html(url)
+
+review_titles = 
+  dynamite_html %>%
+  html_elements(".a-text-bold span") %>%
+  html_text()
+
+review_stars = 
+  dynamite_html %>%
+  html_elements("#cm_cr-review_list .review-rating") %>%
+  html_text()
+
+review_text = 
+  dynamite_html %>%
+  html_elements(".review-text-content span") %>%
+  html_text()
+
+reviews = tibble(
+  title = review_titles,
+  stars = review_stars,
+  text = review_text
+)
+```
+
+Okay, but there are more pages of reviews
+
+Write a functions that gets reviews based on page url
+
+``` r
+get_page_reviews = function(page_url) {
+  
+  page_html = read_html(page_url)
+
+  review_titles = 
+    page_html %>%
+    html_elements(".a-text-bold span") %>%
+    html_text()
+  
+  review_stars = 
+    page_html %>%
+    html_elements("#cm_cr-review_list .review-rating") %>%
+    html_text()
+  
+  review_text = 
+    page_html %>%
+    html_elements(".review-text-content span") %>%
+    html_text()
+  
+  reviews = tibble(
+    title = review_titles,
+    stars = review_stars,
+    text = review_text
+    )
+  
+  return(reviews)
+}
+
+url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1"
+
+get_page_reviews(url)
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                                                 stars   text           
+    ##    <chr>                                                 <chr>   <chr>          
+    ##  1 I Just everyone to know this....                      5.0 ou~ "\n  VOTE FOR ~
+    ##  2 the cobweb in his hair during the bike ramp scene lol 5.0 ou~ "\n  5 stars f~
+    ##  3 Best quirky movie ever                                5.0 ou~ "\n  You all k~
+    ##  4 Classic Film                                          5.0 ou~ "\n  Had to or~
+    ##  5 hehehehe                                              5.0 ou~ "\n  goodjobbo~
+    ##  6 Painful                                               1.0 ou~ "\n  I think I~
+    ##  7 GRAND                                                 5.0 ou~ "\n  GRAND\n"  
+    ##  8 Hello, 90s                                            5.0 ou~ "\n  So nostal~
+    ##  9 Cult Classic                                          5.0 ou~ "\n  Watched i~
+    ## 10 Format was inaccurate                                 4.0 ou~ "\n  There was~
+
+``` r
+# OR
+
+base_url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber="
+
+urls = str_c(base_url, 1:5)
+
+get_page_reviews(urls[1])
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                                                 stars   text           
+    ##    <chr>                                                 <chr>   <chr>          
+    ##  1 I Just everyone to know this....                      5.0 ou~ "\n  VOTE FOR ~
+    ##  2 the cobweb in his hair during the bike ramp scene lol 5.0 ou~ "\n  5 stars f~
+    ##  3 Best quirky movie ever                                5.0 ou~ "\n  You all k~
+    ##  4 Classic Film                                          5.0 ou~ "\n  Had to or~
+    ##  5 hehehehe                                              5.0 ou~ "\n  goodjobbo~
+    ##  6 Painful                                               1.0 ou~ "\n  I think I~
+    ##  7 GRAND                                                 5.0 ou~ "\n  GRAND\n"  
+    ##  8 Hello, 90s                                            5.0 ou~ "\n  So nostal~
+    ##  9 Cult Classic                                          5.0 ou~ "\n  Watched i~
+    ## 10 Format was inaccurate                                 4.0 ou~ "\n  There was~
+
+``` r
+get_page_reviews(urls[2])
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                                       stars              text          
+    ##    <chr>                                       <chr>              <chr>         
+    ##  1 Good funny                                  3.0 out of 5 stars "\n  Would re~
+    ##  2 Not available w/in 48 hour window           1.0 out of 5 stars "\n  I couldn~
+    ##  3 Your mom went to college.                   5.0 out of 5 stars "\n  Classic ~
+    ##  4 Very funny movie                            5.0 out of 5 stars "\n  I watch ~
+    ##  5 Watch it twice! Trust me!                   5.0 out of 5 stars "\n  Nothing ~
+    ##  6 A classic                                   5.0 out of 5 stars "\n  If you d~
+    ##  7 Can't say how many times I've seen          5.0 out of 5 stars "\n  Such a g~
+    ##  8 I pity the fool who doesn’t own this movie. 5.0 out of 5 stars "\n  I love t~
+    ##  9 I don’t know why it’s so popular!           2.0 out of 5 stars "\n  My girlf~
+    ## 10 Okay                                        3.0 out of 5 stars "\n  Okay\n"
+
+``` r
+get_page_reviews(urls[3])
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                                           stars              text      
+    ##    <chr>                                           <chr>              <chr>     
+    ##  1 "A WHOLESOME comedic journey"                   5.0 out of 5 stars "\n  Not ~
+    ##  2 "Hilarious"                                     5.0 out of 5 stars "\n  Funn~
+    ##  3 "Love it"                                       5.0 out of 5 stars "\n  What~
+    ##  4 "WORTH IT!"                                     5.0 out of 5 stars "\n  It's~
+    ##  5 "Funny movie."                                  5.0 out of 5 stars "\n  Grea~
+    ##  6 "Best movie ever!"                              5.0 out of 5 stars "\n  Got ~
+    ##  7 "I was stuck in the oil patch back in the day." 5.0 out of 5 stars "\n  I wa~
+    ##  8 "Funny Dork humor"                              5.0 out of 5 stars "\n  Humo~
+    ##  9 "Still funny!"                                  5.0 out of 5 stars "\n  Stil~
+    ## 10 "Love it!! \U0001f49c"                          5.0 out of 5 stars "\n  Love~
+
+``` r
+get_page_reviews(urls[4])
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                             stars              text                    
+    ##    <chr>                             <chr>              <chr>                   
+    ##  1 "LOVE it"                         5.0 out of 5 stars "\n  cult classic. So u~
+    ##  2 "Perfect"                         5.0 out of 5 stars "\n  Exactly what I ask~
+    ##  3 "Love this movie!"                5.0 out of 5 stars "\n  Great movie and se~
+    ##  4 "Love it"                         5.0 out of 5 stars "\n  Love this movie. H~
+    ##  5 "As described"                    3.0 out of 5 stars "\n  Book is as describ~
+    ##  6 "GOSH!!!"                         5.0 out of 5 stars "\n  Just watch the mov~
+    ##  7 "Watch it right now"              5.0 out of 5 stars "\n  You need to watch ~
+    ##  8 "At this point it’s an addiction" 5.0 out of 5 stars "\n  I watch this movie~
+    ##  9 "\U0001f495"                      5.0 out of 5 stars "\n  Hands down, one of~
+    ## 10 "Good dumb movie"                 5.0 out of 5 stars "\n  I really wanted to~
+
+``` r
+get_page_reviews(urls[5])
+```
+
+    ## # A tibble: 10 x 3
+    ##    title                             stars              text                    
+    ##    <chr>                             <chr>              <chr>                   
+    ##  1 funny                             5.0 out of 5 stars "\n  so funny and inven~
+    ##  2 Best Movie- Try to prove me wrong 5.0 out of 5 stars "\n  Best movie ever\n" 
+    ##  3 Vote For Pedro!!                  5.0 out of 5 stars "\n  What is NOT to lik~
+    ##  4 So Funny                          5.0 out of 5 stars "\n  This is such a goo~
+    ##  5 Best movie ever                   5.0 out of 5 stars "\n  It's napoleon dyna~
+    ##  6 Funny                             5.0 out of 5 stars "\n  Classic\n"         
+    ##  7 It’s broke!                       1.0 out of 5 stars "\n  I don’t know if yo~
+    ##  8 Stupid                            1.0 out of 5 stars "\n  What can I say? St~
+    ##  9 Not funny                         1.0 out of 5 stars "\n  Not funny\n"       
+    ## 10 Great family movie                5.0 out of 5 stars "\n  Everyone should se~
+
+``` r
+bind_rows(
+  get_page_reviews(urls[1]),
+  get_page_reviews(urls[2]),
+  get_page_reviews(urls[3]),
+  get_page_reviews(urls[4]),
+  get_page_reviews(urls[5])
+)
+```
+
+    ## # A tibble: 50 x 3
+    ##    title                                                 stars   text           
+    ##    <chr>                                                 <chr>   <chr>          
+    ##  1 I Just everyone to know this....                      5.0 ou~ "\n  VOTE FOR ~
+    ##  2 the cobweb in his hair during the bike ramp scene lol 5.0 ou~ "\n  5 stars f~
+    ##  3 Best quirky movie ever                                5.0 ou~ "\n  You all k~
+    ##  4 Classic Film                                          5.0 ou~ "\n  Had to or~
+    ##  5 hehehehe                                              5.0 ou~ "\n  goodjobbo~
+    ##  6 Painful                                               1.0 ou~ "\n  I think I~
+    ##  7 GRAND                                                 5.0 ou~ "\n  GRAND\n"  
+    ##  8 Hello, 90s                                            5.0 ou~ "\n  So nostal~
+    ##  9 Cult Classic                                          5.0 ou~ "\n  Watched i~
+    ## 10 Format was inaccurate                                 4.0 ou~ "\n  There was~
+    ## # ... with 40 more rows
